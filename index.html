@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dataport UPT</title>
+    <title>DataportUPT</title>
     <style>
 	
 		body {
@@ -66,11 +66,11 @@
 
     <div id="userContainers">
         <div class="user-container">
-            <input type="text" placeholder="Vorname">
-            <input type="text" placeholder="Nachname">
-            <input type="text" placeholder="Username">
-            <input type="text" placeholder="Email">
-            <input type="text" placeholder="Teams">
+          <input type="text" placeholder="Vorname" oninput="capitalizeFirstLetter(this)">
+          <input type="text" placeholder="Nachname" oninput="capitalizeFirstLetter(this)">
+          <input type="text" placeholder="Username" oninput="lowercaseAll(this)">
+          <input type="text" placeholder="Email" oninput="lowercaseAll(this)" >
+          <input type="text" placeholder="Teams" >
             <button onclick="addUserContainer()">+</button>
         </div>
     </div>
@@ -78,6 +78,7 @@
     <label>
         Umgebung:
         <select id="umgebungDropdown">
+            <option value="99" disabled selected>Bitte auswählen</option>
             <option value="PROD">PROD</option>
             <option value="QS">QS</option>
             <option value="DEV">DEV</option>
@@ -88,6 +89,7 @@
     <label>
         Anlagetyp:
         <select id="anlagetypDropdown">
+            <option value="99" disabled selected>Bitte auswählen</option>
             <option value="SachAnlage">Sachanlage</option>
             <option value="Administration">Administration</option>
             <option value="Geschaeftsfuehrung">Geschäftsführung</option>
@@ -97,6 +99,7 @@
     <label>
         Mandant:
         <select id="mandantDropdown">
+            <option value="99" disabled selected>Bitte auswählen</option>
             <option value="00">ABH</option>
             <option value="01">Altona</option>
             <option value="02">Bergedorf</option>
@@ -111,9 +114,24 @@
         </select>
     </label>
 
-    <button onclick="generateSQLScripts()">Generate SQL Scripts</button>
+    <button onclick="generateSQLScripts()">SQL generieren</button>
 
     <script>
+
+   function capitalizeFirstLetter(inputField) {
+        let inputText = inputField.value;
+        if (inputText.length > 0) {
+            inputField.value = inputText.charAt(0).toUpperCase() + inputText.slice(1);
+        }
+    }
+
+    function lowercaseAll(inputField) {
+        let inputText = inputField.value;
+        if (inputText.length > 0) {
+            inputField.value = inputText.toLowerCase();
+        }
+    }
+    
         let userCount = 1;
 
         function addUserContainer() {
