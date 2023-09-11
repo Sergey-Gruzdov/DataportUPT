@@ -45,10 +45,31 @@
         .user-container input {
             margin-right: 10px;
         }
+        .imgcenter {
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+          width: 15%;
+        }
+
+        .btnGenerate {
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+          width: 10%;
+        }
+
+        .btnAddUser {
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+          width: 10%;
+        }
     </style>
 </head>
 <body>
-    <h2>Dataport UPT</h2>
+    <img src="https://www.dataport-kommunal.de/typo3conf/ext/nc_provider_main/Resources/Public/Images/logo.svg" class="imgcenter">
+    <h2>user provisioning tool</h2>
 
     <label>
         <input type="checkbox" id="functionCheckbox1">
@@ -63,6 +84,45 @@
         <input type="checkbox" id="functionCheckbox3">
         DMS3 (Fachdienststelle)
     </label>
+    
+    <label>
+     | Umgebung:
+      <select id="umgebungDropdown">
+          <option value="99" disabled selected>Bitte auswählen</option>
+          <option value="PROD">PROD</option>
+          <option value="QS">QS</option>
+          <option value="DEV">DEV</option>
+          <option value="SCHUL">SCHUL</option>
+      </select>
+  </label>
+
+  <label>
+      Anlagetyp:
+      <select id="anlagetypDropdown">
+          <option value="99" disabled selected>Bitte auswählen</option>
+          <option value="SachAnlage">Sachanlage</option>
+          <option value="Administration">Administration</option>
+          <option value="Geschaeftsfuehrung">Geschäftsführung</option>
+      </select>
+  </label>
+
+  <label>
+      Mandant:
+      <select id="mandantDropdown">
+          <option value="99" disabled selected>Bitte auswählen</option>
+          <option value="00">ABH</option>
+          <option value="01">Altona</option>
+          <option value="02">Bergedorf</option>
+          <option value="03">Eimsbüttel</option>
+          <option value="04">Harburg</option>
+          <option value="05">HPA</option>
+          <option value="06">Mitte</option>
+          <option value="07">Nord</option>
+          <option value="08">Oktagon Leitstelle</option>
+          <option value="09">Wandsbek</option>
+          <option value="10">Alle Mandanten</option>
+      </select>
+  </label>
 
     <div id="userContainers">
         <div class="user-container">
@@ -71,51 +131,10 @@
           <input type="text" placeholder="Username" oninput="lowercaseAll(this)">
           <input type="text" placeholder="Email" oninput="lowercaseAll(this)" >
           <input type="text" placeholder="Teams" >
-            <button onclick="addUserContainer()">+</button>
         </div>
     </div>
-
-    <label>
-        Umgebung:
-        <select id="umgebungDropdown">
-            <option value="99" disabled selected>Bitte auswählen</option>
-            <option value="PROD">PROD</option>
-            <option value="QS">QS</option>
-            <option value="DEV">DEV</option>
-            <option value="SCHUL">SCHUL</option>
-        </select>
-    </label>
-
-    <label>
-        Anlagetyp:
-        <select id="anlagetypDropdown">
-            <option value="99" disabled selected>Bitte auswählen</option>
-            <option value="SachAnlage">Sachanlage</option>
-            <option value="Administration">Administration</option>
-            <option value="Geschaeftsfuehrung">Geschäftsführung</option>
-        </select>
-    </label>
-
-    <label>
-        Mandant:
-        <select id="mandantDropdown">
-            <option value="99" disabled selected>Bitte auswählen</option>
-            <option value="00">ABH</option>
-            <option value="01">Altona</option>
-            <option value="02">Bergedorf</option>
-            <option value="03">Eimsbüttel</option>
-            <option value="04">Harburg</option>
-            <option value="05">HPA</option>
-            <option value="06">Mitte</option>
-            <option value="07">Nord</option>
-            <option value="08">Oktagon Leitstelle</option>
-            <option value="09">Wandsbek</option>
-            <option value="10">Alle Mandanten</option>
-        </select>
-    </label>
-
-    <button onclick="generateSQLScripts()">SQL generieren</button>
-
+    <button onclick="addUserContainer()" class="btnAddUser">Benutzer hinzufügen</button>
+    <button onclick="generateSQLScripts()" class="btnGenerate">SQL generieren</button>
     <script>
 
    function capitalizeFirstLetter(inputField) {
