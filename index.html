@@ -60,11 +60,42 @@
         }
 
         .btnAddUser {
-          display: block;
+          display: inline;
           margin-left: auto;
           margin-right: auto;
           width: 10%;
         }
+
+        .info-container {
+            display: block;
+          margin-left: auto;
+          margin-right: auto;
+          width: 10%;
+}
+
+.hover-element {
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+}
+
+.info-text {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    top: -30px; /* Adjust the distance from the hover-element */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    white-space: nowrap;
+}
+
+.hover-element:hover .info-text {
+    display: block;
+}
     </style>
 </head>
 <body>
@@ -87,28 +118,29 @@
     
     <label>
      | Umgebung:
-      <select id="umgebungDropdown">
+      <select id="umgebungDropdown" name="dropdown1">
           <option value="99" disabled selected>Bitte auswählen</option>
           <option value="PROD">PROD</option>
           <option value="QS">QS</option>
           <option value="DEV">DEV</option>
           <option value="SCHUL">SCHUL</option>
+          <option value="TEST">TEST</option>
       </select>
   </label>
 
   <label>
       Anlagetyp:
-      <select id="anlagetypDropdown">
+      <select id="anlagetypDropdown" name="dropdown2">
           <option value="99" disabled selected>Bitte auswählen</option>
-          <option value="SachAnlage">Sachanlage</option>
+          <option value="SachAnlage">Sachbearbeiter</option>
           <option value="Administration">Administration</option>
-          <option value="Geschaeftsfuehrung">Geschäftsführung</option>
+          <option value="Geschaeftsfuehrung">Führungskraft</option>
       </select>
   </label>
 
   <label>
       Mandant:
-      <select id="mandantDropdown">
+      <select id="mandantDropdown" name="dropdown3">
           <option value="99" disabled selected>Bitte auswählen</option>
           <option value="00">ABH</option>
           <option value="01">Altona</option>
@@ -126,6 +158,7 @@
 
     <div id="userContainers">
         <div class="user-container">
+            <span>1.   </span> <!-- Zeilennummer -->
           <input type="text" placeholder="Vorname" oninput="capitalizeFirstLetter(this)">
           <input type="text" placeholder="Nachname" oninput="capitalizeFirstLetter(this)">
           <input type="text" placeholder="Username" oninput="lowercaseAll(this)">
@@ -134,8 +167,48 @@
         </div>
     </div>
     <button onclick="addUserContainer()" class="btnAddUser">Benutzer hinzufügen</button>
-    <button onclick="generateSQLScripts()" class="btnGenerate">SQL generieren</button>
+    
+    
+    
+    <div class="info-container">
+        <div class="hover-element">
+            <input type="file" id="csvFile" accept=".csv" >
+            <button onclick="importCSV()" >CSV importieren</button>
+            <span class="info-text">Bitte die CSV in dem folgendem Schema erstellen:
+                Vorname, Nachname, Username, Email, Teams
+
+            </span>
+        </div>
+    </div>
+    <button onclick="checkDropdownsAndGenerateSQL()" class="btnGenerate">SQL generieren</button>
     <script>
+
+function checkDropdownsAndGenerateSQL() {
+            const umgebungDropdown = document.getElementById("umgebungDropdown");
+            const anlagetypDropdown = document.getElementById("anlagetypDropdown");
+            const mandantDropdown = document.getElementById("mandantDropdown");
+            const checkbox1 = document.getElementById("functionCheckbox1");
+            const checkbox2 = document.getElementById("functionCheckbox2");
+            const checkbox3 = document.getElementById("functionCheckbox3");
+
+            // Check if any dropdown has a value of 99
+            if (
+                umgebungDropdown.value === "99" ||
+                anlagetypDropdown.value === "99" ||
+                mandantDropdown.value === "99"
+            ) {
+                // Alert the user to select an option for each dropdown
+                alert("Bitte wählen Sie eine Umgebung, Anlagetypen und Mandanten.");
+            }
+            if (!checkbox1.checked && !checkbox2.checked && !checkbox3.checked)
+            {
+                alert("Bitte wählen Sie eine der Skripttypen.");
+            }
+             else {
+                // All dropdowns have valid selections, proceed to generate SQL script
+                generateSQLScripts();
+            }
+        }
 
    function capitalizeFirstLetter(inputField) {
         let inputText = inputField.value;
@@ -153,11 +226,59 @@
     
         let userCount = 1;
 
-        function addUserContainer() {
+        // Function to handle CSV import
+        function importCSV() {
+            const csvFileInput = document.getElementById("csvFile");
+            const file = csvFileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const contents = e.target.result;
+                    const lines = contents.split("\n");
+
+                    for (const line of lines) {
+                        const data = line.split(",");
+                        if (data.length >= 5) {
+                            // Assuming CSV format: Vorname, Nachname, Username, Email, Teams
+                            const vorname = data[0].trim();
+                            const nachname = data[1].trim();
+                            const username = data[2].trim();
+                            const email = data[3].trim();
+                            const teams = data[4].trim();
+
+                            // Create a new user container and populate input fields
+                            addUserContainerWithValues(vorname, nachname, username, email, teams);
+                        }
+                    }
+                };
+
+                reader.readAsText(file);
+            }
+        }
+
+        function addUserContainerWithValues(vorname, nachname, username, email, teams) {
             const userContainers = document.getElementById("userContainers");
             const newUserContainer = document.createElement("div");
             newUserContainer.className = "user-container";
             newUserContainer.innerHTML = `
+                <input type="text" placeholder="Vorname" value="${vorname}">
+                <input type="text" placeholder="Nachname" value="${nachname}">
+                <input type="text" placeholder="Username" value="${username}">
+                <input type="text" placeholder="Email" value="${email}">
+                <input type="text" placeholder="Teams" value="${teams}">
+            `;
+            userContainers.appendChild(newUserContainer);
+        }
+
+        function addUserContainer() {
+            userCount++;
+            const userContainers = document.getElementById("userContainers");
+            const newUserContainer = document.createElement("div");
+            newUserContainer.className = "user-container";
+            newUserContainer.innerHTML = `
+                <span>${userCount}.</span> <!-- Zeilennummer -->
                 <input type="text" placeholder="Vorname">
                 <input type="text" placeholder="Nachname">
                 <input type="text" placeholder="Username">
