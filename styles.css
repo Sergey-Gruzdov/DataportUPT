@@ -1,0 +1,96 @@
+body {
+    background-color: #f5f5f7;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h2 {
+    font-size: 36px;
+    color: #000; /* Black text color */
+    padding: 20px;
+    text-align: center;
+}
+        .user-container input[type="text"] {
+    padding: 5px;
+    width: calc(25% - 10px);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+ label {
+    display: inline;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.user-container button {
+    padding: 10px 20px;
+    background-color: #0070c9;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.user-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.user-container input {
+    margin-right: 10px;
+}
+.imgcenter {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 15%;
+}
+
+.btnGenerate {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 10%;
+}
+
+.btnAddUser {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 10%;
+}
+
+.info-container {
+    display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 10%;
+}
+
+.hover-element {
+display: inline-block;
+position: relative;
+cursor: pointer;
+}
+
+.info-text {
+display: none;
+position: absolute;
+background-color: #333;
+color: #fff;
+padding: 5px 10px;
+border-radius: 5px;
+top: -30px; /* Adjust the distance from the hover-element */
+left: 50%;
+transform: translateX(-50%);
+z-index: 1;
+white-space: nowrap;
+}
+
+.hover-element:hover .info-text {
+display: block;
+}
+
+.hide {
+  display: none;
+  }
