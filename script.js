@@ -1,4 +1,4 @@
-    // Add event listeners for tab and enter keys
+// Add event listeners for tab and enter keys
     document.addEventListener("keydown", function(event) {
         if (event.key === "Tab" && event.target.tagName !== "SELECT") {
             event.preventDefault();
@@ -121,7 +121,7 @@ function checkDropdownsAndGenerateSQL() {
 
             if (!checkbox1.checked && !checkbox2.checked && !checkbox3.checked)
             {
-                alert("Bitte wählen Sie eine der Skripttypen.");
+                alert("Bitte wählen Sie einen der Skripttypen.");
                 return;
             }
              else {
@@ -143,7 +143,7 @@ function checkDropdownsAndGenerateSQL() {
             inputField.value = inputText.toLowerCase();
         }
     }
-   
+
         function generateSQLScripts() {
             const umgebungDropdown = document.getElementById("umgebungDropdown");
             const anlagetypDropdown = document.getElementById("anlagetypDropdown");
@@ -294,7 +294,7 @@ show user
             }
 
             const users = document.getElementsByClassName("user-container");
-
+            
             for (const user of users) {
                 const inputs = user.querySelectorAll("input");
                 const vorname = inputs[0].value;
