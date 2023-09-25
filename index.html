@@ -8,21 +8,13 @@
 <body>
     <img src="https://www.dataport-kommunal.de/typo3conf/ext/nc_provider_main/Resources/Public/Images/logo.svg" class="imgcenter">
     <h2>user provisioning tool</h2>
+<div class="box">
+    <div style=>
+        <label><input type="checkbox" id="functionCheckbox1">G2VB</label><br/>
+        <label><input type="checkbox" id="functionCheckbox2">DMS3</label><br/>
+        <label><input type="checkbox" id="functionCheckbox3">DMS3 Fachdienststelle</label><br/>
+    </div>
 
-    <label>
-        <input type="checkbox" id="functionCheckbox1">
-        G2VB+
-    </label>
-    <label>
-        <input type="checkbox" id="functionCheckbox2">
-        DMS3
-    </label>
-
-    <label>
-        <input type="checkbox" id="functionCheckbox3">
-        DMS3 (Fachdienststelle)
-    </label>
-    
     <label>
      | Umgebung:
       <select id="umgebungDropdown" name="dropdown1">
@@ -34,9 +26,9 @@
           <option value="TEST">TEST</option>
       </select>
   </label>
-
+</br>
   <label>
-      Anlagetyp:
+     | Anlagetyp:
       <select id="anlagetypDropdown" name="dropdown2">
           <option value="99" disabled selected>Bitte auswählen</option>
           <option value="SachAnlage">Sachbearbeiter</option>
@@ -44,9 +36,9 @@
           <option value="Geschaeftsfuehrung">Führungskraft</option>
       </select>
   </label>
-
+</br>
   <label>
-      Mandant:
+     | Mandant:
       <select id="mandantDropdown" name="dropdown3">
           <option value="99" disabled selected>Bitte auswählen</option>
           <option value="00">ABH</option>
@@ -62,7 +54,8 @@
           <option value="10">Alle Mandanten</option>
       </select>
   </label>
-
+</div>
+</br>
     <div id="userContainers">
     </div>
     <button onclick="addUserContainer()" class="btnAddUser">Benutzer hinzufügen</button>
@@ -74,7 +67,7 @@
             <input type="file" id="csvFile" accept=".csv" tabindex="1" >
             <button onclick="importCSV()" tabindex="2" >CSV importieren</button>
             <span class="info-text">Bitte die CSV in dem folgendem Schema erstellen:
-                Vorname, Nachname, Username, Email, Teams
+                Vorname, Nachname, Username, Email, Teams.
 
             </span>
         </div>
