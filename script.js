@@ -75,10 +75,10 @@
         newUserContainer.className = "user-container";
         newUserContainer.innerHTML = `
             <span>${userCount}.</span> <!-- Zeilennummer -->
-            <input type="text" placeholder="Vorname">
-            <input type="text" placeholder="Nachname">
-            <input type="text" placeholder="Username">
-            <input type="text" placeholder="Email">
+            <input type="text" placeholder="Vorname" oninput="capitalizeFirstLetter(this)">
+            <input type="text" placeholder="Nachname" oninput="capitalizeFirstLetter(this)">
+            <input type="text" placeholder="Username" oninput="lowercaseAll(this)">
+            <input type="text" placeholder="Email" oninput="lowercaseAll(this)">
             <input type="text" placeholder="Teams">
         `;
         userContainers.appendChild(newUserContainer);
