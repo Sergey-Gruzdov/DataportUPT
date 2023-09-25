@@ -94,3 +94,19 @@ display: block;
 .hide {
   display: none;
   }
+
+  .box {
+    display: flex;
+    width: 60%;
+    margin: auto;
+    overflow: auto; 
+    width: 800px; 
+    background-color: #FFF; 
+    height: 80px; 
+    border: 2px double #000000; 
+  }
+  .user-container
+  {
+    padding: 1px;
+    margin-top: 25px;
+  }
