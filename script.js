@@ -19,9 +19,6 @@
         }
     });
 
- 
-    let userCount = 0;
-
     // Function to handle CSV import
     function importCSV() {
         const csvFileInput = document.getElementById("csvFile");
@@ -53,7 +50,8 @@
             reader.readAsText(file);
         }
     }
-
+// container for adding new user divs from imported CSV
+    let userCount = 0;
     function addUserContainerWithValues(vorname, nachname, username, email, teams) {
         userCount++;
         const userContainers = document.getElementById("userContainers");
@@ -69,7 +67,7 @@
         `;
         userContainers.appendChild(newUserContainer);
     }
-
+// container for adding new user divs manually
     function addUserContainer() {
         userCount++;
         const userContainers = document.getElementById("userContainers");
@@ -86,13 +84,20 @@
         userContainers.appendChild(newUserContainer);
     }
 
-    function replaceVariables(script, umgebung, anlagetyp, mandant) {
+    function replaceVariables(script, umgebung, anlagetyp, mandant, rolle, layout, recht, rolle_dms3, auth_dms3, fachprofil_dms3) {
         script = script.replace(/__UMGEBUNG/g, umgebung);
         script = script.replace(/__SKRIPTNAME/g, anlagetyp);
-  script = script.replace(/__USER/g, mandant);
+        script = script.replace(/__USER/g, mandant);
+        script = script.replace(/__Sachanalge/g, mandant);
+        script = script.replace(/__rolle/g, rolle);
+        script = script.replace(/__layout/g, layout);
+        script = script.replace(/__recht/g, recht);
+        script = script.replace(/__authdms3/g, auth_dms3);
+        script = script.replace(/__dms3rolle/g, rolle_dms3);
+        script =script.replace(/__fachprofildms3/g, fachprofil_dms3)
         return script;
     }
-
+// Function to check if conditions are met to generate SQL file
 
 function checkDropdownsAndGenerateSQL() {
             const umgebungDropdown = document.getElementById("umgebungDropdown");
@@ -103,7 +108,7 @@ function checkDropdownsAndGenerateSQL() {
             const checkbox3 = document.getElementById("functionCheckbox3");
             const userContainers = document.querySelectorAll(".user-container");
 
-            // Check if any dropdown has a value of 99
+            // Check if any dropdown has a value of 99 and is therefore not selected
             if (
                 umgebungDropdown.value === "99" ||
                 anlagetypDropdown.value === "99" ||
@@ -113,12 +118,12 @@ function checkDropdownsAndGenerateSQL() {
                 alert("Bitte wählen Sie eine Umgebung, Anlagetypen und Mandanten.");
                 return;
             }
-            
+            // Alert the user to add at least one user
             if (userContainers.length === 0) {
                 alert("Bitte fügen Sie mindestens einen Benutzer hinzu.");
                 return;
             }
-
+            // check if no checkboxes are ticked and alert if none are, else generate SQL Script
             if (!checkbox1.checked && !checkbox2.checked && !checkbox3.checked)
             {
                 alert("Bitte wählen Sie eine der Skripttypen.");
@@ -129,21 +134,21 @@ function checkDropdownsAndGenerateSQL() {
                 generateSQLScripts();
             }
         }
-
+// function to capitalize first letters in Name and surname inputs
    function capitalizeFirstLetter(inputField) {
         let inputText = inputField.value;
         if (inputText.length > 0) {
             inputField.value = inputText.charAt(0).toUpperCase() + inputText.slice(1);
         }
     }
-
+// function to lower all letters in Email and username inputs
     function lowercaseAll(inputField) {
         let inputText = inputField.value;
         if (inputText.length > 0) {
             inputField.value = inputText.toLowerCase();
         }
     }
-   
+   // Function that generates SQL Scripts from entered values and predefinded parts of the script
         function generateSQLScripts() {
             const umgebungDropdown = document.getElementById("umgebungDropdown");
             const anlagetypDropdown = document.getElementById("anlagetypDropdown");
@@ -151,8 +156,13 @@ function checkDropdownsAndGenerateSQL() {
             const umgebung = umgebungDropdown.value;
             const anlagetyp = anlagetypDropdown.value;
             const mandant = mandantDropdown.value;
-            let input
-
+            let input;
+            let rolle = "";
+            let layout = "";
+            let recht = "";
+            let rolle_dms3 ="";
+            let auth_dms3 = "";
+            let fachprofil_dms3 = "";
             const checkbox1 = document.getElementById("functionCheckbox1");
             const checkbox2 = document.getElementById("functionCheckbox2");
             const checkbox3 = document.getElementById("functionCheckbox3");
@@ -160,6 +170,42 @@ function checkDropdownsAndGenerateSQL() {
             let script1 = "";
             let script2 = "";
             let script3 = "";
+
+            if (anlagetypDropdown.value === "SachAnlage" )
+              {
+                rolle = "Sachbearbeiter";
+                layout = "Sachbearbeiter_Layout";
+                recht = "Sachbearbeiter_Recht";
+                rolle_dms3 = "('Abzeichnung', 'eIndex Modul',                                      'PUBLIC', 'Sachbearbeiter')";
+                auth_dms3 = "Dms3LdapAuthorization";
+                fachprofil_dms3 = "(profile_type='D' and name='FHH-Sachbearbeitung_Dokumente') or (profile_type='A' and name='FHH-Sachbearbeitung_Akten')";
+              }
+
+              if (anlagetypDropdown.value === "Administration" )
+              {
+                rolle = "Administration";
+                layout = "$OTS_Standard_Layout";
+                recht = "$OTS_Standard_AllesW";
+                rolle_dms3 = "('Administratoren',                                                  'PUBLIC')";
+                auth_dms3 = "Dms3ShaAuthorization";
+                fachprofil_dms3 = "(profile_type='D' and name='FHH-Admin') or (profile_type='A' and name='FHH_Standard')";
+              }
+
+              if (anlagetypDropdown.value === "Geschaeftsfuehrung" )
+              {
+                rolle = "Führungskräfte";
+                layout = "Führungskräfte_Layout";
+                recht = "Führungskräfte_Recht";
+                rolle_dms3 = "('Abzeichnung', 'eIndex Modul', 'Führungskräfte', 'Geschäftszimmer', 'PUBLIC', 'Sachbearbeiter')";
+                auth_dms3 = "Dms3LdapAuthorization";
+                fachprofil_dms3 = "(profile_type='D' and name='FHH-Sachbearbeitung_Dokumente') or (profile_type='A' and name='FHH-Sachbearbeitung_Akten')";
+              }
+              const rolle_value = rolle;
+              const layout_value = layout;
+              const recht_value = recht;
+              const auth_dms3_value = auth_dms3;
+              const rolle_dms3_value = rolle_dms3;
+              const fachprofil_dms3_value = fachprofil_dms3;
 
             if (checkbox1.checked) {
                 script1 = `
@@ -170,11 +216,11 @@ set feedback on
 set serveroutput on
 
 --Für den Skriptautomat des TVM, damit das richtige log befüllt wird und es 1 log je Mandant gibt
---Variablen für Umgebung, Schema und Skriptname änderbar. Bitte keine Leerzeichen verwenden.\n`;
-                script1 += `DEFINE _UMGEBUNG: __UMGEBUNG;\n`;
-				script1 += `DEFINE _USER = G2VB__USER;\n`;
-                script1 += `DEFINE _SKRIPTNAME: __SKRIPTNAME;\n\n`;
-				script1 += `
+--Variablen für Umgebung, Schema und Skriptname änderbar. Bitte keine Leerzeichen verwenden.\n
+DEFINE UMGEBUNG: __UMGEBUNG;\n
+DEFINE USER = G2VB__USER;\n
+DEFINE SKRIPTNAME: __SKRIPTNAME;\n\n
+
 set termout off
 col DATUM new_value DATUM
 select to_char(sysdate,'YYYYMMDDHH24MISS') DATUM from dual;
@@ -219,11 +265,10 @@ set feedback on
 set serveroutput on
 
 --Für den Skriptautomat des TVM, damit das richtige log befüllt wird und es 1 log je Mandant gibt
---Variablen für Umgebung, Schema und Skriptname änderbar. Bitte keine Leerzeichen verwenden.\n`;
-                script2 += `DEFINE _UMGEBUNG: __UMGEBUNG;\n`;
-				script2 += `DEFINE _USER = DMS3__USER;\n`;
-                script2 += `DEFINE _SKRIPTNAME: __SKRIPTNAME;\n\n`;
-				script2 += `
+--Variablen für Umgebung, Schema und Skriptname änderbar. Bitte keine Leerzeichen verwenden.\n
+DEFINE _UMGEBUNG: __UMGEBUNG;\n
+DEFINE _USER = DMS3__USER;\n
+DEFINE _SKRIPTNAME: __SKRIPTNAME;\n\n
 set termout off
 col DATUM new_value DATUM
 select to_char(sysdate,'YYYYMMDDHH24MISS') DATUM from dual;
@@ -262,11 +307,10 @@ CREATE TABLE ETeam_Personen (zeile NUMBER GENERATED ALWAYS as IDENTITY(START wit
 				script3 = `
 set echo on
 set feedback on
-set serveroutput on\n`;
-                script3 += `DEFINE _UMGEBUNG: __UMGEBUNG;\n`;
-				script3 += `DEFINE _USER = DMS3__USER;\n`;
-                script3 += `DEFINE _SKRIPTNAME: __SKRIPTNAME;\n\n`;
-				script3 += `
+set serveroutput on\n
+DEFINE _UMGEBUNG: __UMGEBUNG;\n
+DEFINE _USER = DMS3__USER;\n
+DEFINE _SKRIPTNAME: __SKRIPTNAME;\n\n
 set termout off
 col DATUM new_value DATUM
 select to_char(sysdate,'YYYYMMDDHH24MISS') DATUM from dual;
@@ -292,7 +336,7 @@ show user
 
 -- DMS3-Skript zur Anlage von Fachdienststellen\n`;
             }
-
+            //generate SQL Files depending on which checkboxes are ticked 
             const users = document.getElementsByClassName("user-container");
 
             for (const user of users) {
@@ -317,7 +361,6 @@ show user
             }
 
             if (checkbox1.checked) {
-                script1 = replaceVariables(script1, umgebung, anlagetyp, mandant);
 				script1 += `
 DROP TABLE ETeam_Result CASCADE CONSTRAINTS;
 CREATE TABLE ETeam_Result (zeile NUMBER GENERATED ALWAYS as IDENTITY(START with 1 INCREMENT by 1),
@@ -375,8 +418,7 @@ select t.* from
    FROM
      (select nvl(max(id),0) MAX_ID from ST_ULR_USER_ROLLEN)ur,
      (select id ULR_ROLLEN_ID from st_ulr_rollen where kuerzel in
-('Sachbearbeiter_Layout','Sachbearbeiter_Recht')
-      )r)t
+('__recht','__layout')r)t
    where (t.ident_User_id, t.ulr_rollen_id) not in (select ident_User_id,ulr_rollen_id from ST_ULR_USER_ROLLEN);
 -- ^^^ Einstellung: OTS Rollenzuordnungen ^^^
 -- Führungskräfte = ('Führungskräfte_Layout','Führungskräfte_Recht')
@@ -395,8 +437,7 @@ select t.* from
           sysdate MODDAT, 'ots-service' MODIFIER 
    FROM
      (select nvl(max(id),0) MAX_ID from IDENT_USERROLES)ur,
-     (select id role_Id from ident_roles where rolename=
-'Sachbearbeiter'
+     (select id role_Id from ident_roles where rolename='__rolle';
 )r)t
 where (t.user_Id, t.role_id) not in (select user_id,role_id from IDENT_USERROLES);
 -- ^^^ Einstellung: G2VB Rollenzuordnung ^^^
@@ -456,11 +497,11 @@ select TO_CHAR (SYSTIMESTAMP, 'dd.mm.yyyy hh24:mi:ss.ff') "SYSTIMESTAMP" from du
 spool off
 
 --Ende Standardfuß`;
+script1 = replaceVariables(script1, umgebung, anlagetyp, mandant, rolle_value, recht_value, layout_value, auth_dms3_value, rolle_dms3_value, fachprofil_dms3);;
                 downloadScript(script1, "G2VB+-Skript.sql");
             }
 
             if (checkbox2.checked) {
-                script2 = replaceVariables(script2, umgebung, anlagetyp, mandant);
 				script2 += `
 DROP TABLE ETeam_Result CASCADE CONSTRAINTS;
 CREATE TABLE ETeam_Result (zeile NUMBER GENERATED ALWAYS as IDENTITY(START with 1 INCREMENT by 1),
@@ -508,7 +549,7 @@ select t.* from(
          sysdate LAST_PWD_UPDATE, sysdate LAST_LOGIN, 'HVJMieZ1+B1/WNDxcd5v8Q==' PWD_SALT,
          'Y' PWD_TEMPORARY, 'N' SYS, v_vorname PRENAME, v_nachname SECNAME,
          1000 ORGANIZATION_UNIT, 
-'Dms3LdapAuthorization'
+'__dms3rolle'
          AUTH_PROVIDER
   from ST_USER)t
 WHERE t.login not in(select login from ST_USER);
@@ -539,7 +580,7 @@ INSERT INTO USER_ROLE (USER_ID, ROLLE_ID)
 select t.* from
 	(select v_user_id user_id, r.rolle_id from
 		(select id rolle_Id from st_role where description in
-('Abzeichnung', 'eIndex Modul',                                      'PUBLIC', 'Sachbearbeiter')
+__authdms3
 		 )r)t
 where (t.user_Id, t.rolle_Id) not in(select user_Id,rolle_id from user_role);
 -- ^^^ Einstellung DSM3 Rollenzuordnung ^^^
@@ -563,7 +604,7 @@ select t.* from
 where (t.user_id, t.profile_type) not in(select user_id, profile_type from USER_SPECIALISEDMENUEPROFILE);
 i:=sql%rowcount;
 --commit;
-DBMS_OUTPUT.PUT_LINE('#4 Fachprofile eingetragen , rows='||i);
+DBMS_OUTPUT.PUT_LINE __fachprofildms3;
 -- ^^^ Einstellung: Fachprofile ^^^
 -- Administration: (profile_type='D' and name='FHH-Admin') or (profile_type='A' and name='FHH_Standard')
 -- Alle anderen:   (profile_type='D' and name='FHH-Sachbearbeitung_Dokumente') or (profile_type='A' and name='FHH-Sachbearbeitung_Akten')
@@ -603,12 +644,12 @@ END;
 select TO_CHAR (SYSTIMESTAMP, 'dd.mm.yyyy hh24:mi:ss.ff') "SYSTIMESTAMP" from dual;
 spool off
 
---ende Standardfuß`;
+--ende Standardfuß`
+script2 = replaceVariables(script2, umgebung, anlagetyp, mandant, rolle_value, recht_value, layout_value, auth_dms3_value, rolle_dms3_value, fachprofil_dms3);;
                 downloadScript(script2, "DMS3-Skript.sql");
             }
 
             if (checkbox3.checked) {
-                script3 = replaceVariables(script3, umgebung, anlagetyp, mandant);
 				script3 += `
 --INSERT INTO ST_USER values((select max(id)+1 from st_user),lower('##BENUTZERNAME##'),'03zNRqLIxrX/95mRz0s59GGEuvlJHv0ZjiH30/Ud7G8=','720',null,'KEINE',null,null,'N',null,null,'N','N','1',null,null,null,sysdate,null,'##ZEICHEN DER DIENSTSTELLE##',null,'ETEAM_MASSENANLAGE',null,null,null,null,null,null,null,null,null,null,sysdate,'82ithP2XlpgIVi7Cevmifw==','Y','N',0,'##VORNAME##','##NACHNAME##',1000,'Dms3LdapAuthorization',null,null,null);
 commit;
@@ -644,10 +685,11 @@ commit;
 
 select TO_CHAR (SYSTIMESTAMP, 'dd.mm.yyyy hh24:mi:ss.ff') from dual;
 spool off\n`;
+script3 = replaceVariables(script3, umgebung, anlagetyp, mandant, rolle_value, recht_value, layout_value, auth_dms3_value, rolle_dms3_value, fachprofil_dms3);
                 downloadScript(script3, "DMS3-Dienststellenanlage-Skript.sql");
             }
         }
-
+        //function to automatically download the created files, this is used by the generateSQL function for the download of each script
         function downloadScript(content, filename) {
             const blob = new Blob([content], { type: "text/plain" });
             const url = URL.createObjectURL(blob);
