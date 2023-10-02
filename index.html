@@ -59,17 +59,17 @@
 </br>
     <div id="userContainers">
     </div>
-    <button onclick="addUserContainer()" class="btnAddUser">Benutzer hinzufügen</button>
-    <button onclick="removeUserContainer()" class="btnAddUser">Benutzer entfernen</button>
+    <button onclick="addUserContainer()" class="btnAddUser" tabindex="1">Benutzer hinzufügen</button>
+    <button onclick="removeUserContainer()" class="btnAddUser"tabindex="2">Benutzer entfernen</button>
     <div class="info-container">
         <div class="hover-element">
-            <input type="file" id="csvFile" accept=".csv" tabindex="1" >
-            <button onclick="importCSV()" tabindex="2" >CSV importieren</button>
+            <input type="file" id="csvFile" accept=".csv" tabindex="3" >
+            <button onclick="importCSV()" tabindex="4" >CSV importieren</button>
             <span class="info-text">Bitte die CSV in dem folgendem Schema erstellen:
                 Vorname, Nachname, Username, Email, Teams. Die Teams müssen mit einem Komma getrennt werden.
             </span>
         </div>
     </div>
-    <button onclick="checkDropdownsAndGenerateSQL()" class="btnGenerate" tabindex="3">SQL generieren</button>
+    <button onclick="checkDropdownsAndGenerateSQL()" class="btnGenerate" tabindex="5">SQL generieren</button>
 </body>
 </html>
