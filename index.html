@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
     <title>DataportUPT</title>
     <link rel="stylesheet" href="styles.css">
@@ -60,16 +60,13 @@
     <div id="userContainers">
     </div>
     <button onclick="addUserContainer()" class="btnAddUser">Benutzer hinzufügen</button>
-    
-    
-    
+    <button onclick="removeUserContainer()" class="btnAddUser">Benutzer entfernen</button>
     <div class="info-container">
         <div class="hover-element">
             <input type="file" id="csvFile" accept=".csv" tabindex="1" >
             <button onclick="importCSV()" tabindex="2" >CSV importieren</button>
             <span class="info-text">Bitte die CSV in dem folgendem Schema erstellen:
-                Vorname, Nachname, Username, Email, Teams.
-
+                Vorname, Nachname, Username, Email, Teams. Die Teams müssen mit einem Komma getrennt werden.
             </span>
         </div>
     </div>

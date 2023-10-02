@@ -84,6 +84,14 @@
         userContainers.appendChild(newUserContainer);
     }
 
+    // Function to remove user container
+    function removeUserContainer() {
+        const userContainers = document.getElementById("userContainers");
+        const userContainer = userContainers.lastChild;
+        userContainers.removeChild(userContainer);
+        userCount--;
+    }
+
     function replaceVariables(script, umgebung, anlagetyp, mandant, rolle, layout, recht, rolle_dms3, auth_dms3, fachprofil_dms3) {
         script = script.replace(/__UMGEBUNG/g, umgebung);
         script = script.replace(/__SKRIPTNAME/g, anlagetyp);
